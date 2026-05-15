@@ -586,13 +586,10 @@ const tips = [
   '⚡ Deep: Thorough, covers all nested flows, highest token usage.',
 ];
 
-const inputOptions = [{ label: 'Target URL', value: 'url' }];
-
 const CrawlPage: React.FC = () => {
   const [section, setSection] = useState<'new' | 'history'>('new');
 
   // Form state
-  const [inputType, setInputType] = useState<'url'>('url');
   const [url, setUrl] = useState('');
   const [maxDepth, setMaxDepth] = useState(2);
   const [excludedUrls, setExcludedUrls] = useState('');
@@ -1087,27 +1084,6 @@ const CrawlPage: React.FC = () => {
           {section === 'new' && (
             <div className="card" style={{ padding: 32, marginBottom: 32 }}>
               <form onSubmit={handleStartCrawl}>
-                {/* Input Type Selector */}
-                <div className="input-group" style={{ marginBottom: 18 }}>
-                  <div className="input-label">Input Method</div>
-                  <select
-                    className="input-field"
-                    value={inputType}
-                    onChange={e => setInputType(e.target.value as 'url')}
-                    disabled={
-                      isLoading ||
-                      jobStatus?.status === 'running' ||
-                      jobStatus?.status === 'pending'
-                    }
-                  >
-                    {inputOptions.map(opt => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 {/* URL Input */}
                 <>
                   <div className="input-group" style={{ marginBottom: 18 }}>
@@ -1310,72 +1286,72 @@ const CrawlPage: React.FC = () => {
                 {/* Button Group */}
                 <div style={{ display: 'flex', gap: 10, flexDirection: 'column' }}>
                   <button
-                          type="submit"
-                          className="btn btn-primary"
-                          disabled={
-                            isLoading ||
-                            jobStatus?.status === 'running' ||
-                            jobStatus?.status === 'pending'
-                          }
-                          style={{
-                            width: '100%',
-                            padding: '10px 14px',
-                            fontSize: '14px',
-                            fontWeight: 500,
-                            minHeight: '40px',
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={
+                      isLoading ||
+                      jobStatus?.status === 'running' ||
+                      jobStatus?.status === 'pending'
+                    }
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      minHeight: '40px',
 
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
 
-                            textAlign: 'center',
+                      textAlign: 'center',
 
-                            opacity:
-                              isLoading ||
-                              jobStatus?.status === 'running' ||
-                              jobStatus?.status === 'pending'
-                                ? 0.6
-                                : 1,
+                      opacity:
+                        isLoading ||
+                        jobStatus?.status === 'running' ||
+                        jobStatus?.status === 'pending'
+                          ? 0.6
+                          : 1,
 
-                            cursor: isLoading ? 'not-allowed' : 'pointer',
-                          }}
-                        >
-                          {isLoading ? 'Starting...' : 'Start Crawl'}
-                        </button>
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    {isLoading ? 'Starting...' : 'Start Crawl'}
+                  </button>
 
                   {jobStatus &&
                     (jobStatus.status === 'running' ||
                       jobStatus.status === 'pending' ||
                       jobStatus.status === 'paused') && (
                       <button
-                              type="button"
-                              className="btn"
-                              onClick={handleOpenStatusPopup}
-                              disabled={isLoading}
-                              style={{
-                                width: '100%',
-                                minHeight: '54px',
+                        type="button"
+                        className="btn"
+                        onClick={handleOpenStatusPopup}
+                        disabled={isLoading}
+                        style={{
+                          width: '100%',
+                          minHeight: '54px',
 
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
 
-                                padding: 0,
-                                margin: 0,
+                          padding: 0,
+                          margin: 0,
 
-                                fontSize: '14px',
-                                fontWeight: 500,
-                                lineHeight: 1,
+                          fontSize: '14px',
+                          fontWeight: 500,
+                          lineHeight: 1,
 
-                                textAlign: 'center',
+                          textAlign: 'center',
 
-                                opacity: isLoading ? 0.6 : 1,
+                          opacity: isLoading ? 0.6 : 1,
 
-                                cursor: isLoading ? 'not-allowed' : 'pointer',
-                              }}
-                            >
-                              📊 View Status
-                            </button>
+                          cursor: isLoading ? 'not-allowed' : 'pointer',
+                        }}
+                      >
+                        📊 View Status
+                      </button>
                     )}
                 </div>
               </form>
@@ -1569,50 +1545,6 @@ const CrawlPage: React.FC = () => {
                   </li>
                 ))}
             </ul>
-          </div>
-
-          <div className="card" style={{ padding: 24 }}>
-            <div className="card-title" style={{ marginBottom: 12 }}>
-              Advanced Options
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  cursor: 'pointer',
-                  fontSize: 13,
-                }}
-              >
-                <input type="checkbox" defaultChecked style={{ accentColor: 'var(--accent)' }} />
-                Include authentication flows
-              </label>
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  cursor: 'pointer',
-                  fontSize: 13,
-                }}
-              >
-                <input type="checkbox" defaultChecked style={{ accentColor: 'var(--accent)' }} />
-                Generate negative test cases
-              </label>
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  cursor: 'pointer',
-                  fontSize: 13,
-                }}
-              >
-                <input type="checkbox" style={{ accentColor: 'var(--accent)' }} />
-                Screenshot each step
-              </label>
-            </div>
           </div>
         </div>
       </div>
