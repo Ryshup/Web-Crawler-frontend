@@ -16,6 +16,8 @@ interface UploadedDocument {
   progress: number;
   error?: string;
   result?: DocumentResultData;
+  _lastError?: string;
+  _pollAttempts?: number;
 }
 
 const DocumentUploadPage: React.FC = () => {
@@ -72,6 +74,28 @@ const DocumentUploadPage: React.FC = () => {
     pollIntervalRef.current = setInterval(async () => {
       for (const doc of uploadedDocuments) {
         if (doc.status === 'processing' && doc.workflowId) {
+          const pollAttempts = (doc._pollAttempts || 0) + 1;
+          const MAX_POLL_ATTEMPTS = 150; // ~5 minutes with 2-second intervals
+
+          // Auto-timeout after max attempts
+          if (pollAttempts > MAX_POLL_ATTEMPTS) {
+            setUploadedDocuments(prev =>
+              prev.map(d => {
+                if (d.id === doc.id) {
+                  return {
+                    ...d,
+                    status: 'failed',
+                    progress: 0,
+                    error:
+                      'Processing timeout - backend did not complete within 5 minutes. Check OCR service.',
+                  };
+                }
+                return d;
+              }),
+            );
+            continue;
+          }
+
           try {
             const status = await ocrService.getProcessingStatus(doc.workflowId);
 
@@ -96,19 +120,28 @@ const DocumentUploadPage: React.FC = () => {
                   } else {
                     // Still processing, increment progress
                     const newProgress = Math.min(d.progress + Math.random() * 20, 90);
-                    return { ...d, progress: newProgress };
+                    return { ...d, progress: newProgress, _pollAttempts: pollAttempts };
                   }
                 }
                 return d;
               }),
             );
-          } catch {
-            // Increment progress anyway to show activity
+          } catch (error) {
+            // Log the error for debugging
+            console.error(`[DocumentUpload] Failed to get status for ${doc.id}:`, error);
+
+            // Mark as failed if error persists
             setUploadedDocuments(prev =>
               prev.map(d => {
                 if (d.id === doc.id) {
                   const newProgress = Math.min(d.progress + 5, 85);
-                  return { ...d, progress: newProgress };
+                  return {
+                    ...d,
+                    progress: newProgress,
+                    _pollAttempts: pollAttempts,
+                    // Store error message for debugging
+                    _lastError: error instanceof Error ? error.message : String(error),
+                  };
                 }
                 return d;
               }),
