@@ -1,10 +1,10 @@
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 2100;
+  z-index: 99;
   background: linear-gradient(45deg, black, transparent);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   padding: 14px 32px;
   display: flex;
   align-items: center;
@@ -20,6 +20,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  position: relative;
 }
 
 .topbar-user {
@@ -28,15 +29,14 @@
   gap: 10px;
   padding: 6px 12px 6px 8px;
   background: aliceblue;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s;
   position: relative;
-  z-index: 2100;
 }
 .topbar-user:hover {
-  border-color: rgba(255,255,255,0.14);
+  border-color: rgba(255, 255, 255, 0.14);
   background: #fff;
 }
 .t-avatar {
@@ -51,7 +51,8 @@
   color: black;
 }
 .avatar-admin {
-  background: linear-gradient(45deg, black, transparent);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(20px);
 }
 .avatar-qa {
   background: linear-gradient(135deg, #5b6ef5, #3d52d5);
@@ -70,18 +71,19 @@
   font-family: 'DM Mono', monospace;
 }
 .user-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+  position: fixed;
+  top: 62px;
+  right: 32px;
   background: #000;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 12px;
   padding: 8px;
   min-width: 200px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   display: none;
-  z-index: 2000;
+  z-index: 10001;
   animation: dropIn 0.18s ease;
+  pointer-events: auto;
 }
 .topbar-user.open .user-dropdown {
   display: block;
@@ -105,14 +107,21 @@
   color: #ff6b6b;
 }
 .dd-item.danger:hover {
-  background: rgba(255,107,107,0.08);
+  background: rgba(255, 107, 107, 0.08);
 }
 .dd-sep {
   height: 1px;
   background: black;
   margin: 6px 0;
 }
+
 @keyframes dropIn {
-  from { opacity:0; transform:translateY(-6px); }
-  to { opacity:1; transform:translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -156,32 +156,41 @@ const LiveJobsPage: React.FC = () => {
   }, []);
   return (
     <>
-      <div className="topbar">
-        <span className="page-title">
-          Live Jobs
-          <span
-            style={{
-              marginLeft: 10,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: 13,
-              color: 'var(--text-muted)',
-            }}
-          >
-            <span className="live-dot" /> Polling every 3s
-          </span>
-        </span>
-        <div className="topbar-right">
-          <button className="btn btn-ghost" onClick={() => navigate('/')}>
-            ← Dashboard
-          </button>
-          <button className="btn btn-primary" onClick={() => navigate('/new-crawl')}>
-            ＋ Crawl
-          </button>
-        </div>
-      </div>
       <div className="content">
+        {/* Header inside content */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '20px',
+            padding: '20px 0',
+          }}
+        >
+          <span className="page-title">
+            Live Jobs
+            <span
+              style={{
+                marginLeft: 10,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 13,
+                color: 'var(--text-muted)',
+              }}
+            >
+              <span className="live-dot" /> Polling every 3s
+            </span>
+          </span>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button className="btn btn-ghost" onClick={() => navigate('/')}>
+              ← Dashboard
+            </button>
+            <button className="btn btn-primary" onClick={() => navigate('/new-crawl')}>
+              ＋ Crawl
+            </button>
+          </div>
+        </div>
         <div className="card" style={{ marginBottom: 20 }}>
           <div className="card-header">
             <span style={{ color: 'var(--accent)' }}>⚡</span>
