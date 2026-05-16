@@ -8,7 +8,7 @@ class OCRApiClient {
   constructor() {
     // OCR Backend runs on port 8001
     this.client = axios.create({
-      baseURL: 'http://localhost:8001',
+      baseURL: 'https://yfb6l6xrf1.execute-api.us-east-1.amazonaws.com/extractdoc',
       timeout: 60000, // OCR processing might take longer
       headers: {
         'Content-Type': 'application/json',
