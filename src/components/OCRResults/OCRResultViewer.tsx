@@ -147,39 +147,47 @@ const OCRResultViewer: React.FC<OCRResultViewerProps> = ({ result, fileName }) =
 
   const renderPages = () => (
     <div className="ocr-pages">
-      <div className="page-selector">
-        {result.pages.map((page, idx) => (
-          <button
-            key={idx}
-            className={`page-button ${selectedPage === idx ? 'active' : ''}`}
-            onClick={() => setSelectedPage(idx)}
-          >
-            Page {page.page_number}
-          </button>
-        ))}
-      </div>
-
-      {result.pages[selectedPage] && (
-        <div className="page-content">
-          <h3>Page {result.pages[selectedPage].page_number}</h3>
-          <div className="page-stats">
-            <span>Segments: {result.pages[selectedPage].page_summary.total_segments}</span>
-            {result.pages[selectedPage].has_images && <span>📷 Has Images</span>}
-            {result.pages[selectedPage].has_tables && <span>📊 Has Tables</span>}
-            {result.pages[selectedPage].is_scanned && <span>📄 Scanned</span>}
+      {!result.pages || result.pages.length === 0 ? (
+        <p style={{ color: 'var(--text-dim)' }}>No pages found</p>
+      ) : (
+        <>
+          <div className="page-selector">
+            {result.pages.map((page, idx) => (
+              <button
+                key={idx}
+                className={`page-button ${selectedPage === idx ? 'active' : ''}`}
+                onClick={() => setSelectedPage(idx)}
+              >
+                Page {page.page_number}
+              </button>
+            ))}
           </div>
 
-          <div className="segments-list">
-            {result.pages[selectedPage].segments.map((segment, idx) => renderSegment(segment, idx))}
-          </div>
-        </div>
+          {result.pages[selectedPage] && (
+            <div className="page-content">
+              <h3>Page {result.pages[selectedPage].page_number}</h3>
+              <div className="page-stats">
+                <span>Segments: {result.pages[selectedPage].page_summary.total_segments}</span>
+                {result.pages[selectedPage].has_images && <span>📷 Has Images</span>}
+                {result.pages[selectedPage].has_tables && <span>📊 Has Tables</span>}
+                {result.pages[selectedPage].is_scanned && <span>📄 Scanned</span>}
+              </div>
+
+              <div className="segments-list">
+                {result.pages[selectedPage].segments?.map((segment, idx) =>
+                  renderSegment(segment, idx),
+                )}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
 
   const renderHierarchy = () => (
     <div className="ocr-hierarchy">
-      {result.hierarchy.length === 0 ? (
+      {!result.hierarchy || result.hierarchy.length === 0 ? (
         <p style={{ color: 'var(--text-dim)' }}>No document hierarchy found</p>
       ) : (
         <ul className="hierarchy-list">
@@ -189,7 +197,7 @@ const OCRResultViewer: React.FC<OCRResultViewerProps> = ({ result, fileName }) =
                 <span className="hierarchy-heading">
                   {'#'.repeat(node.level)} {node.heading}
                 </span>
-                {node.content.length > 0 && (
+                {node.content && node.content.length > 0 && (
                   <p className="hierarchy-content">{node.content.join(' ')}</p>
                 )}
               </div>
@@ -260,7 +268,7 @@ const OCRResultViewer: React.FC<OCRResultViewerProps> = ({ result, fileName }) =
           className={`tab-button ${viewMode === 'pages' ? 'active' : ''}`}
           onClick={() => setViewMode('pages')}
         >
-          Pages ({result.pages.length})
+          Pages ({result.pages?.length || 0})
         </button>
         <button
           className={`tab-button ${viewMode === 'hierarchy' ? 'active' : ''}`}
